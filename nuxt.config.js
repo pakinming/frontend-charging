@@ -6,8 +6,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - vuetify-charger',
-    title: 'vuetify-charger',
+    titleTemplate: '%s - charger ',
+    title: 'Jinpao ',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -46,10 +46,48 @@ export default {
     '@nuxtjs/pwa',
     // https://go.nuxtjs.dev/content
     '@nuxt/content',
+    '@nuxtjs/auth-next',
   ],
 
+  auth: {   
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/login',
+      home: '/login'
+    },
+    strategies: {
+      
+      local: {
+        cookie: {
+          name: 'sid'
+        },
+        token: {
+          property: 'Authorization',
+          global: true,
+          required: true,
+          type: 'Bearer',
+          cookie:true
+        },
+        user: {
+          property: 'user',
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'https://ws-charging.herokuapp.com/api/login', method: 'post', propertyName: 'Authorization',  },
+          logout: { url: 'https://ws-charging.herokuapp.com/api/logout', method: 'post', propertyName: 'Authorization', },
+          user: false//{ url: '/api/auth/user', method: 'get' }
+        }
+      }
+    }
+  },
+
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: 'https://ws-charging.herokuapp.com',            
+ 
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
