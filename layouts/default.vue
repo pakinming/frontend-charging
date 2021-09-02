@@ -101,7 +101,7 @@ export default {
       console.log('logout',this.$store.state.isLogon);
     },
     isLogon(){      
-      return this.$store.state.isLogon
+      return this.$auth.loggedIn || '';
     }   
   },
   data() {
@@ -119,6 +119,11 @@ export default {
           icon: 'mdi-cash-multiple',
           title: 'Cash',
           to: '/cash',
+        },
+        {
+          icon: 'mdi-monitor-eye',
+          title: 'Machine',
+          to: '/monitor',
         },
         {
           icon: 'mdi-monitor-eye',
