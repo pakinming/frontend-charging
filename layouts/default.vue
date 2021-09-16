@@ -33,6 +33,30 @@
           </v-list-item>
         </v-list-group>
 
+        <v-list-group no-action>
+          <template v-slot:activator>
+            <v-list-item-action>
+              <v-icon>mdi-account-multiple</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="'Member'" />
+            </v-list-item-content>
+          </template>
+
+          <v-list-item
+            v-for="(item, index) in memberItem"
+            :key="index"
+            :to="item.to"
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -62,7 +86,7 @@
       <LogoutComponent />
     </v-app-bar>
 
-    <v-main>     
+    <v-main>
       <v-container>
         <Nuxt />
       </v-container>
@@ -87,22 +111,19 @@
 import { mapMutations } from 'vuex'
 
 export default {
-  computed:{
- 
-  },
+  computed: {},
   mounted() {
-    this.loggedIn =  this.$auth.loggedIn
-
+    this.loggedIn = this.$auth.loggedIn
   },
   methods: {
     logout() {
       this.$store.commit('setIslogon', false)
       this.$auth.logout()
-      console.log('logout',this.$store.state.isLogon);
+      console.log('logout', this.$store.state.isLogon)
     },
-    isLogon(){      
-      return this.$auth.loggedIn || '';
-    }   
+    isLogon() {
+      return this.$auth.loggedIn || ''
+    },
   },
   data() {
     return {
@@ -110,25 +131,30 @@ export default {
       drawer: true,
       fixed: false,
       items: [
-        {
-          icon: 'mdi-account-multiple',
-          title: 'Member',
-          to: '/member',
-        },
+        // {
+        //   icon: 'mdi-account-multiple',
+        //   title: 'Member',
+        //   to: '/member',
+        // },
         {
           icon: 'mdi-cash-multiple',
           title: 'Cash',
           to: '/cash',
         },
-        {
-          icon: 'mdi-monitor-eye',
-          title: 'Machine',
-          to: '/monitor',
-        },
+        // {
+        //   icon: 'mdi-monitor-eye',
+        //   title: 'Machine',
+        //   to: '/machine',
+        // },
         {
           icon: 'mdi-monitor-eye',
           title: 'Monitor',
           to: '/monitor',
+        },
+        {
+          icon: 'mdi-folder-clock-outline',
+          title: 'History',
+          to: '/history',
         },
         {
           icon: 'mdi-chat-alert',
@@ -151,6 +177,18 @@ export default {
           icon: 'mdi-card-search-outline',
           title: 'Find',
           to: '/cardFind',
+        },
+      ],
+      memberItem: [
+        {
+          icon: 'mdi-plus-circle',
+          title: 'Add Member',
+          to: '/member',
+        },
+        {
+          icon: 'mdi-account-multiple',
+          title: 'All member',
+          to: '/memberall',
         },
       ],
       miniVariant: false,

@@ -1,5 +1,7 @@
 <script>
 export default {
-    host: `https://ws-charging.herokuapp.com`,
+    host: `http://localhost:8888`,
+   //  host: `https://ws-charging.herokuapp.com`,
 }
+
 </script>

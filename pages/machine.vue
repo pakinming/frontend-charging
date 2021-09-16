@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-row >
+    <v-row justify="center">
       <v-col cols="12" sm="10" md="8" lg="6">
-        <h1>Cash</h1>
+        <h1>Machine</h1>
       </v-col>
     </v-row>
 
-    <v-row >
+    <v-row justify="center">
       <v-col cols="12" sm="10" md="8" lg="6">
         <v-card ref="form">
           <v-card-text>
@@ -17,7 +17,7 @@
               :error-messages="errorMessages"
               label="Search"
               prepend-icon="mdi-account"
-              placeholder="Your name member"
+              placeholder="Your Member"
               required
               :append-outer-icon="'mdi-account-search'"
               @click:append-outer="toggleMarker"
@@ -72,7 +72,7 @@
             <v-text-field
               ref="amount"
               v-model="amount"
-              :rules="[() => !!amount || 'This field is required', rules.mobileNumber]"
+              :rules="[() => !!cardId || 'This field is required']"
               label="Amount"
               placeholder="Up per"
               prepend-icon="mdi-cash-multiple"
@@ -120,7 +120,7 @@ export default {
       },
       mobileNumber: (value) => {
         const pattern = /^([0-9]*)$/
-        return pattern.test(value) || 'Invalid number only and more then zero'
+        return pattern.test(value) || 'Invalid moblie number only'
       },
     },
     items: [

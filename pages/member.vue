@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-row justify="center">
+    <v-row>
       <v-col cols="12" sm="10" md="8" lg="6">
         <h1>Add Member</h1>
       </v-col>
     </v-row>
 
-    <v-row justify="center">
+    <v-row>
       <v-col cols="12" sm="10" md="8" lg="6">
         <v-card ref="form">
           <v-card-text>
@@ -57,7 +57,7 @@
               ref="cardId"
               v-model="cardId"
               :rules="[() => !!cardId || 'This field is required']"
-              :items="items"
+              :items="cards"
               label="CARD ID"
               placeholder="Select..."
               prepend-icon="mdi-credit-card-settings"
@@ -123,7 +123,7 @@ export default {
         return pattern.test(value) || "Invalid moblie number only"
       },
     },
-    items: [
+    cards: [
       'RFID0001',
       'RFID0002',
       'RFID0003',
@@ -177,5 +177,8 @@ export default {
       })
     },
   },
+  mounted(){
+    this.$axios.get()
+  }
 }
 </script>
