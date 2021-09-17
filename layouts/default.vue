@@ -73,6 +73,19 @@
             </v-list-item-content>
           </template>
         </v-list-item>
+
+         <v-list-item
+         @click="logout"
+        >
+          <template>
+            <v-list-item-action>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="'Logout'" />
+            </v-list-item-content>
+          </template>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -136,11 +149,11 @@ export default {
         //   title: 'Member',
         //   to: '/member',
         // },
-        {
-          icon: 'mdi-cash-multiple',
-          title: 'Cash',
-          to: '/cash',
-        },
+        // {
+        //   icon: 'mdi-cash-multiple',
+        //   title: 'Cash',
+        //   to: '/cash',
+        // },
         // {
         //   icon: 'mdi-monitor-eye',
         //   title: 'Machine',
@@ -151,21 +164,21 @@ export default {
           title: 'Monitor',
           to: '/monitor',
         },
-        {
-          icon: 'mdi-folder-clock-outline',
-          title: 'History',
-          to: '/history',
-        },
+        // {
+        //   icon: 'mdi-folder-clock-outline',
+        //   title: 'History',
+        //   to: '/history',
+        // },
         {
           icon: 'mdi-chat-alert',
           title: 'About',
           to: '/about',
         },
-        {
-          icon: 'mdi-account',
-          title: 'Login',
-          to: '/login',
-        },
+        // {
+        //   icon: 'mdi-account',
+        //   title: 'Login',
+        //   to: '/login',
+        // },
       ],
       cardItem: [
         {

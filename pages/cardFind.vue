@@ -16,7 +16,73 @@
       :headers="headers"
       :items="desserts"
       :search="search"
-    ></v-data-table>
+    >
+      <template v-slot:top>
+        <v-dialog v-model="dialog" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">{{ formTitle }}</span>
+            </v-card-title>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        ref="owner"
+                        label="Name"
+                        v-model="editedItem.owner"
+                        readonly
+                        :rules="[rules.required]"
+                        filled
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        ref="cardId"
+                        label="Card ID"
+                        v-model="editedItem.cardId"
+                        readonly
+                        filled
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        ref="amount"
+                        label="Amount"
+                        v-model="amount"
+                        placeholder="0"
+                        :rules="[rules.required, rules.amount]"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+            </v-form>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
+              <v-btn color="blue darken-1" text @click="saveAmount">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </template>
+
+      <template v-slot:item.actions="{ item }">
+        <v-btn small color="blue " @click="editItem(item)">
+          <v-icon> mdi-plus </v-icon>top up
+        </v-btn>
+      </template>
+    </v-data-table>
+
+    <v-alert dense text type="success" :value="alertSuccess" fat>
+      amount up
+    </v-alert>
+    <v-alert dense text type="error" :value="alertError">
+      Error <strong>{{ errorMessages }}</strong> try again
+    </v-alert>
   </v-card>
 </template>
 
@@ -25,28 +91,49 @@ import dataRef from '../model/dataRef.vue'
 
 export default {
   middleware: 'auth',
- data () {
-      return {
-        search: '',
-        loading:true,
-        headers: [
-          {
-            text: 'Card ID',
-            align: 'start',
-            // filterable: false,
-            value: 'cardId',
-          },
-          { text: 'Owner', value: 'owner' },
-          { text: 'Balance Amount', value: 'amount' },
+  data() {
+    return {
+      search: '',
+      loading: true,
+      dialog: false,
+      amount: null,
+      formTitle: 'Top up',
+      alertSuccess: false,
+      alertError: false,
+      errorMessages: '',
+      valid: true,
+      rules: {
+        amount: (val) => {
+          const pattent = /^\d*\.?\d*$/
+          return pattent.test(val) || 'Invalid'
+        },
+        required: (value) => !!value || 'This field is required.',
+      },
+      editedItem: {
+        name: '',
+        email: 0,
+        cardId: 0,
+        MobileNumber: 0,
+        datetime: 0,
+        owner: '',
+      },
+      headers: [
+        {
+          text: 'Card ID',
+          align: 'start',
+          // filterable: false,
+          value: 'cardId',
+        },
+        { text: 'Owner', value: 'owner' },
+        { text: 'Balance Amount', value: 'amount' },
 
-          { text: 'Status', value: 'status' },
-          { text: 'Register(d/m/y)', value: 'registerData' },          
-        ],
-        desserts: [
-          
-        ],
-      }
-    },
+        { text: 'Status', value: 'status' },
+        { text: 'Register(d/m/y)', value: 'registerData' },
+        { text: 'Cash', value: 'actions', align: 'center', filterable: false },
+      ],
+      desserts: [],
+    }
+  },
   computed: {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage)
@@ -54,7 +141,6 @@ export default {
     filteredKeys() {
       return this.keys.filter((key) => key !== 'Name')
     },
-
   },
   methods: {
     nextPage() {
@@ -66,13 +152,58 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number
     },
-  },
-  mounted() {
-    this.$axios.get(`${dataRef.host}/api/getAllCard`).then( (res) => {
-        console.log(res.data.data);
+    editItem(item) {
+      // this.editedIndex = this.desserts.indexOf(item)
+      this.amount = ''
+
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
+      console.log('item', item)
+    },
+    close() {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+      })
+    },
+    saveAmount() {
+      if (this.$refs.form.validate()) {
+        this.$axios
+          .get(
+            `${dataRef.host}/api/cardId/amountup/${
+              this.editedItem.cardId
+            }/${Number(this.amount)}`
+          )
+          .then((res) => {
+            if (res.data.success) {
+              this.alertSuccess = true
+              this.amount = null
+              this.updatetable()
+              this.close()
+              setTimeout(() => {
+                this.alertSuccess = false
+              }, 5000)
+            }
+          })
+          .catch((error) => {
+            console.log('error')
+          })
+      }
+    },
+    updatetable() {
+      this.$axios.get(`${dataRef.host}/api/getAllCard`).then((res) => {
+        console.log(res.data.data)
         this.desserts = res.data.data
         this.loading = false
       })
+    },
+  },
+  mounted() {
+    this.$axios.get(`${dataRef.host}/api/getAllCard`).then((res) => {
+      console.log(res.data.data)
+      this.desserts = res.data.data
+      this.loading = false
+    })
   },
 }
 </script>

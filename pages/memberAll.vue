@@ -11,11 +11,10 @@
         hide-details
       ></v-text-field>
     </v-card-title>
-    <v-data-table :headers="headers" :items="desserts" :search="search">
+    <v-data-table :headers="headers" :items="desserts" :search="search" :loading="loading">
       <template v-slot:top>
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
-
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
@@ -53,16 +52,16 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+              <v-btn color="blue darken-1" text @click="saveAmount">
+                Save
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-btn small color="blue darken-1" text @click="editItem(item)">
-          <v-icon class="mr-2">
-            mdi-plus
-          </v-icon>top up
+          <v-icon class="mr-2"> mdi-plus </v-icon>top up
         </v-btn>
       </template>
     </v-data-table>
@@ -70,6 +69,8 @@
 </template>
 
 <script>
+import dataRef from '../model/dataRef.vue'
+
 export default {
   middleware: 'auth',
   data() {
@@ -77,93 +78,25 @@ export default {
       search: '',
       dialog: false,
       amount: null,
-      formTitle:"Top up",
+      formTitle: 'Top up',
+      loading:true,
       headers: [
         {
-          text: 'Name',
+          text: 'Username',
           align: 'start',
           // filterable: false,
-          value: 'name',
+          value: 'username',
         },
-        { text: 'Card ID', value: 'cardId' },
+        {
+          text: 'Surname',  value: 'surname',
+        },       
         { text: 'Email', value: 'email' },
 
-        { text: 'Mobile', value: 'MobileNumber' },
-        { text: 'Register(d/m/y)', value: 'datetime' },
-        { text: 'Amount', value: 'actions', align:"center" },
+        { text: 'Mobile', value: 'mobileNumber' },
+        { text: 'Register(d/m/y)', value: 'dateTime' },
+       // { text: 'Cash', value: 'actions', align: 'center', filterable:false},
       ],
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          email: 'Frozen@outlook.com',
-          cardId: 'X8KSU3BHSA7G8N9ELI6AE8V1S',
-          MobileNumber: '0926851753',
-          datetime: '02/09/2021',
-        },
-        {
-          name: 'Ice cream sandwich',
-          email: 'Icecream@gmail.com',
-          cardId: '8J5E8IPD8BJVA3H7RIUKEB5NW',
-          MobileNumber: '0874807983',
-          datetime: '04/09/2021',
-        },
-        {
-          name: 'Eclair',
-          email: 'Eclair@gmail.com',
-          cardId: 'QUEXGRYRL6R0BFDC3NMFHGVYP',
-          MobileNumber: '0699976921',
-          datetime: '01/09/2021',
-        },
-        {
-          name: 'Cupcake',
-          email: 'Cupcake@gmail.com',
-          cardId: 'TWX95NW7GIELRQDM90R7S8YIV',
-          MobileNumber: '0921900076',
-          datetime: '01/09/2021',
-        },
-        {
-          name: 'Gingerbread',
-          email: 'Ginger@gmail.com',
-          cardId: 'P2JRV5YOLDXJT80RJ06EDTFFM',
-          MobileNumber: '0990286516',
-          datetime: '01/09/2021',
-        },
-        {
-          name: 'Jelly bean',
-          email: 'jellybean@hotmail.com',
-          cardId: 'XDM6TJ1APJBC3W5IT9U5RRJIU',
-          MobileNumber: '0863958440',
-          datetime: '01/09/2021',
-        },
-        {
-          name: 'Lollipop',
-          email: 'Lollipop@pop.catch.com',
-          cardId: 'LL8VPE2LDAKSMF701UAU567GN',
-          MobileNumber: '0997912599',
-          datetime: '01/09/2021',
-        },
-        {
-          name: 'Honeycomb',
-          email: 'Honeycomb@ada.co.en',
-          cardId: 'J4XF47TMIIHO0RPO5S6YEW5V8',
-          MobileNumber: '0965202286',
-          datetime: '07/09/2021',
-        },
-        {
-          name: 'Donut',
-          email: 'Donuty@mail.com',
-          cardId: 'YWWYGP82C2L1CXV0J41GA8OHU',
-          MobileNumber: '0981591588',
-          datetime: '05/09/2021',
-        },
-        {
-          name: 'KitKat',
-          email: 'KitKat@me.co.th',
-          cardId: 'E50WRDRQBNJQ6E19D9PELQXX9',
-          MobileNumber: '0979489607',
-          datetime: '05/09/2021',
-        },
-      ],
+      desserts: [],
       editedItem: {
         name: '',
         email: 0,
@@ -180,7 +113,6 @@ export default {
     filteredKeys() {
       return this.keys.filter((key) => key !== 'Name')
     },
-
   },
   methods: {
     nextPage() {
@@ -204,9 +136,17 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
       })
     },
-    save() {
+    saveAmount() {
       this.close()
     },
+  },
+  mounted() {
+    this.$axios.get(`${dataRef.host}/api/getMemberSeller`).then((res) => {
+      this.desserts = []
+      this.desserts = res.data.data
+      console.log(res)
+      this.loading = false
+    })
   },
 }
 </script>

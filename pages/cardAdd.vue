@@ -8,42 +8,44 @@
 
     <v-row>
       <v-col cols="12" sm="10" md="8" lg="6">
-        <v-card ref="form">
-          <v-card-text>
-            <v-text-field
-              ref="cardId"
-              v-model="cardId"
-              
-              label="Card ID"              
-              prepend-icon="mdi-credit-card-settings"
-              required
-            ></v-text-field>
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-card>
+            <v-card-text>
+              <v-text-field
+                ref="cardId"
+                v-model="cardId"
+                label="Card ID"
+                prepend-icon="mdi-credit-card-settings"
+                :rules="[rules.required]"
+              ></v-text-field>
 
-            <v-text-field
-              ref="amount"
-              v-model="amount"
-              label="Amount"
-              placeholder="Up per"
-              prepend-icon="mdi-cash-multiple"
-            ></v-text-field>
-          </v-card-text>
+              <v-text-field
+                ref="amount"
+                v-model="amount"
+                label="Amount"
+                placeholder="Up per"
+                prepend-icon="mdi-cash-multiple"
+                :rules="[ rules.amount]"
+              ></v-text-field>
+            </v-card-text>
 
-          <v-divider class="mt-5"></v-divider>
+            <v-divider class="mt-5"></v-divider>
 
-          <v-card-actions>
-            <v-btn color="primary" @click="submit" text left tile block>
-              <v-icon> mdi-plus </v-icon>
-              Add
-            </v-btn>
-          </v-card-actions>
+            <v-card-actions>
+              <v-btn color="primary" @click="submit" text left tile block>
+                <v-icon> mdi-plus </v-icon>
+                Add
+              </v-btn>
+            </v-card-actions>
 
-          <v-alert dense text type="success" :value="alertSuccess">
-            Add Card ID success
-          </v-alert>
-          <v-alert dense text type="error" :value="alertError">
-            Error <strong>{{ errorMessages }}</strong> try again
-          </v-alert>
-        </v-card>
+            <v-alert dense text type="success" :value="alertSuccess">
+              Add Card ID success
+            </v-alert>
+            <v-alert dense text type="error" :value="alertError">
+              Error <strong>{{ errorMessages }}</strong> try again
+            </v-alert>
+          </v-card>
+        </v-form>
       </v-col>
     </v-row>
   </v-container>
@@ -55,7 +57,7 @@ import dataRef from '../model/dataRef.vue'
 export default {
   middleware: 'auth',
   data: () => ({
-    amount: null,
+    amount: 0,
     marker: true,
     errorMessages: '',
     username: null,
@@ -67,6 +69,7 @@ export default {
     email: '',
     alertSuccess: false,
     alertError: false,
+    valid: true,
     rules: {
       required: (value) => !!value || 'This field is required.',
       counter: (value) => value.length <= 20 || 'Max 20 characters',
@@ -78,6 +81,10 @@ export default {
       mobileNumber: (value) => {
         const pattern = /^([0-9]*)$/
         return pattern.test(value) || 'Invalid moblie number only'
+      },
+      amount: (val) => {
+        const pattent = /^\d*\.?\d*$/
+        return pattent.test(val) || 'Invalid'
       },
     },
     items: [
@@ -114,7 +121,8 @@ export default {
       this.marker = !this.marker
     },
     addressCheck() {
-      this.errorMessages = this.address && !this.username ? `Hey! I'm required` : ''
+      this.errorMessages =
+        this.address && !this.username ? `Hey! I'm required` : ''
 
       return true
     },
@@ -130,29 +138,34 @@ export default {
       this.formHasErrors = false
       this.cardId
       this.amount
-      const res = await this.$axios
-        .post(`${dataRef.host}/api/cardId/add`, {
-          _id: this.cardId,
-          cardId: this.cardId,
-          amount: this.amount,
-        })
-        .then((res) => {
-          console.log(res.data.success)
-          if (res.data.success) {
-            this.cardId = null
-            this.amount = null
-            this.alertSuccess = true
-            this.alertError = false
-          }
-          if (res.data.error) {
-            this.alertError = true
-            this.alertSuccess = false
-            this.cardId = null
-            this.amount = null
-             this.errorMessages = res.data.error
-          } else {
-          }
-        })
+
+      if (this.$refs.form.validate()) {
+        const res = await this.$axios
+          .post(`${dataRef.host}/api/cardId/add`, {
+            _id: this.cardId,
+            cardId: this.cardId,
+            amount: this.amount,
+          })
+          .then((res) => {
+            console.log(res.data.success)
+            if (res.data.success) {
+              this.cardId = null
+              this.amount = null
+              this.alertSuccess = true
+              this.alertError = false            
+              this.$refs.form.reset()
+            }
+            if (res.data.error) {
+              this.alertError = true
+              this.alertSuccess = false
+              this.cardId = null
+              this.amount = null
+              this.errorMessages = res.data.error
+            } else {
+            }
+          })
+          console.log('submit', res)
+      }
       // .catch( (res)=> {
       //   this.alertError = true
       //   this.alertSuccess = false
@@ -160,7 +173,7 @@ export default {
       //   console.log(res);
       // });
 
-      console.log('submit', res)
+      
     },
   },
 }
