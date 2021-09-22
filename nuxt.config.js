@@ -2,7 +2,9 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
+  // target: 'static',
+  target: 'server',
+  ssr: true, // default value
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -36,6 +38,7 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/pwa',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -93,7 +96,8 @@ export default {
   pwa: {
     manifest: {
       lang: 'en'
-    }
+    },
+    ssr: false
   },
 
   // Content module configuration: https://go.nuxtjs.dev/config-content

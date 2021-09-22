@@ -35,9 +35,7 @@
             v-for="port in item.portStatus"
             :key="port.portNumber"
           >
-            <div for="plug1">
-              Port Number: {{ Number(port.portNumber) + 1 }}
-            </div>
+            <div for="plug1">Port Number: {{ Number(port.portNumber) }}</div>
             <div for="plug1">
               Status:
               {{
@@ -69,14 +67,19 @@
               Stop charger in:
               {{
                 Number(port.stop) - now > 0
-                  ? `${((Number(port.stop) - now) / (1000 * 60)).toFixed(2)}`
+                  ? timer(
+                      Number(port.start),
+                      Number(port.stop),
+                      item._id,
+                      port.portNumber
+                    )
                   : '0'
               }}
               minute
 
               <br />
             </div>
-            <div>
+            <!-- <div>
               used:
               {{
                 (now - Number(port.start)) / (1000 * 60) < Number(item.timer)
@@ -84,7 +87,7 @@
                   : '0'
               }}
               minute
-            </div>
+            </div> -->
             <!-- <div for="plug1">Finish in: {{ new Date(Number(port.stop)).toLocaleString('TH',{hour: 'numeric', minute: 'numeric', second: 'numeric', }) }}</div> -->
           </v-col>
         </v-card>
@@ -124,9 +127,22 @@ export default {
       this.reload = setInterval(() => {
         console.log('Reload')
         this.$axios.get(`${dataRef.host}/api/AllMachine`).then((res) => {
-          this.items = res.data.data 
+          this.items = res.data.data
+          this.now = res.data.now
         })
-      }, 10000)
+      }, 1000 * 60)
+    },
+    timer(start, stop, name, port) {
+      let over = 0
+      let now = new Date(this.now).getTime()
+      let current = (stop - now) / 1000
+      let min = ~~((current % 3600) / 60)
+      let sec = ~~current % 60
+      let result = `${min.toString().length > 1 ? min : '0' + min}:${sec.toString().length > 1 ? sec : '0' + sec}`
+      console.log(
+        `Name ${name} port ${port} current ${current} min ${min} sec ${sec}`
+      )
+      return result
     },
   },
   computed: {
@@ -137,6 +153,7 @@ export default {
   mounted() {
     this.$axios.get(`${dataRef.host}/api/AllMachine`).then((res) => {
       this.items = res.data.data
+      this.now = res.data.now
       this.loading = false
       console.log(res.data.data)
     })
@@ -144,12 +161,10 @@ export default {
   beforeDestroy() {
     clearInterval(this.myInterval)
     clearInterval(this.reload)
-
   },
   created() {
     this.updateTimer()
     this.calTimer()
-    
   },
 }
 </script>

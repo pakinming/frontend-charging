@@ -123,15 +123,7 @@ export default {
         return pattern.test(value) || 'Invalid moblie number only'
       },
     },
-    items: [
-      'RFID0001',
-      'RFID0002',
-      'RFID0003',
-      'RFID0004',
-      'RFID0005',
-      'RFID0006',
-      'RFID0010',
-    ],
+    items: [ ],
   }),
 
   computed: {
