@@ -2,6 +2,11 @@
 <template>
   <v-card>
     <v-card-title>Your member</v-card-title>
+
+    <v-card-title>
+      <v-btn color="success" @click="dialog = !dialog"> New Member </v-btn>
+    </v-card-title>
+
     <v-card-title>
       <v-text-field
         v-model="search"
@@ -11,51 +16,16 @@
         hide-details
       ></v-text-field>
     </v-card-title>
-    <v-data-table :headers="headers" :items="desserts" :search="search" :loading="loading">
+    <v-data-table
+      :headers="headers"
+      :items="desserts"
+      :search="search"
+      :loading="loading"
+    >
       <template v-slot:top>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" max-width="700px">
           <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Name"
-                      v-model="editedItem.name"
-                      readonly
-                      filled
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Card ID"
-                      v-model="editedItem.cardId"
-                      readonly
-                      filled
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Amount"
-                      v-model="amount"
-                      placeholder="0"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="saveAmount">
-                Save
-              </v-btn>
-            </v-card-actions>
+            <Member />
           </v-card>
         </v-dialog>
       </template>
@@ -79,7 +49,7 @@ export default {
       dialog: false,
       amount: null,
       formTitle: 'Top up',
-      loading:true,
+      loading: true,
       headers: [
         {
           text: 'Username',
@@ -88,13 +58,14 @@ export default {
           value: 'username',
         },
         {
-          text: 'Surname',  value: 'surname',
-        },       
+          text: 'Surname',
+          value: 'surname',
+        },
         { text: 'Email', value: 'email' },
 
         { text: 'Mobile', value: 'mobileNumber' },
         { text: 'Register(d/m/y)', value: 'dateTime' },
-       // { text: 'Cash', value: 'actions', align: 'center', filterable:false},
+        // { text: 'Cash', value: 'actions', align: 'center', filterable:false},
       ],
       desserts: [],
       editedItem: {
