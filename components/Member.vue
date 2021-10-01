@@ -7,7 +7,7 @@
     </v-row>
 
     <v-row>
-      <v-col cols="12" >
+      <v-col cols="12">
         <v-card>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-card-text>
@@ -25,7 +25,7 @@
               <v-text-field
                 ref="surname"
                 v-model="surname"
-                :rules="[() => !!surname || 'This field is required']"               
+                :rules="[() => !!surname || 'This field is required']"
                 label="Surname"
                 placeholder="John Doe"
                 prepend-icon="mdi-account-details"
@@ -71,6 +71,7 @@
             <v-card-actions>
               <v-btn text> Cancel </v-btn>
               <v-spacer></v-spacer>
+
               <v-slide-x-reverse-transition>
                 <v-tooltip v-if="formHasErrors" left>
                   <template v-slot:activator="{ on, attrs }">
@@ -212,14 +213,14 @@ export default {
     },
   },
   mounted() {
-          this.$axios.get(`${dataRef.host}/api/getAllCard`).then((res) => {
-        console.log(res.data.data)
-        this.desserts = res.data.data
-        this.loading = false
-        res.data.data.map((e) => {
-          if (!e.owner) this.cards.push(e.cardId)
-        })
+    this.$axios.get(`${dataRef.host}/api/getAllCard`).then((res) => {
+      console.log(res.data.data)
+      this.desserts = res.data.data
+      this.loading = false
+      res.data.data.map((e) => {
+        if (!e.owner) this.cards.push(e.cardId)
       })
+    })
   },
 }
 </script>

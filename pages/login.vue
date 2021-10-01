@@ -1,4 +1,4 @@
-<template>
+<template >
   <v-container>
     <v-row justify="center">
       <v-col cols="12" xs="8" sm="8" md="8" lg="5" xl="4">
@@ -9,12 +9,14 @@
             </v-toolbar-title>
           </v-col>
 
-          <v-text-field
+          <v-text-field            
+            label="Username"
             v-model="username"
             prepend-icon="mdi-account"
             :rules="[rules.required]"
-            :type="'text'"
-            label="Username"
+            :type="'text'"   
+            placeholder="Username"
+            clearable
           ></v-text-field>
 
           <v-text-field
@@ -27,23 +29,27 @@
             hint="At least 6 characters"
             counter
             @click:append="pwdshow = !pwdshow"
-          ></v-text-field>         
-              <v-btn
-                variant="outlined"
-                class="d-inline"
-                color="green"
-                width="100%"
-                @click="userLogin()"
-              >
-                <v-icon>mdi-login</v-icon>
-                login
-              </v-btn>
-       
-       
+          ></v-text-field>
+          <v-btn
+            variant="outlined"
+            class="d-inline mb-2"
+            color="green"
+            width="70%"
+            @click="userLogin()"
+          >
+            <v-icon>mdi-login</v-icon>
+            login
+          </v-btn>
+
+          <v-btn color="blue" text  :to="'/'" :light="true"    >
+            Register
+          </v-btn>
+                   <v-btn color="blue darken-2" text x-small :to="'forgetPassword'" :light="false">
+            Forgot password?
+          </v-btn>
         </v-card>
       </v-col>
     </v-row>
-       
   </v-container>
 </template>
 
@@ -64,6 +70,7 @@ export default {
     if (this.$auth.loggedIn) {
       this.$router.replace({ name: 'index' })
     }
+  
   },
   data() {
     return {
