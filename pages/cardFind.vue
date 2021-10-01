@@ -9,6 +9,8 @@
         label="Search"
         single-line
         hide-details
+        calculate-widths
+        dense
       ></v-text-field>
     </v-card-title>
     <v-data-table
@@ -18,7 +20,8 @@
       :search="search"
     >
       <template v-slot:top>
-        <v-dialog v-model="dialog" max-width="500px">
+        <!-- Top up -->
+        <v-dialog v-model="cashDialog" max-width="500px">
           <v-card>
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
@@ -68,17 +71,122 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+        <!--  Edit -->
+        <v-dialog v-model="editDialog" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">Edit</span>
+            </v-card-title>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        ref="owner"
+                        label="Name"
+                        v-model="editedItem.owner"
+                        :rules="[rules.required]"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+            </v-form>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
+              <v-btn color="blue darken-1" text @click="saveAmount">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <!-- Delete -->
+        <v-dialog v-model="delDialog" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">Delete</span>
+            </v-card-title>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-card-text>
+                <v-list>
+                  <v-list-item>
+                    <v-list-item-action>
+                      <v-list-item-title>Card ID</v-list-item-title>
+                    </v-list-item-action>
+
+                    <v-list-item-content>
+                      <v-list-item>{{ editedItem.cardId }}</v-list-item>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-divider></v-divider>
+
+                  <v-list-item>
+                    <v-list-item-action>
+                      <v-list-item-title>Owner</v-list-item-title>
+                    </v-list-item-action>
+
+                    <v-list-item-content>
+                      <v-list-item>{{ editedItem.owner }}</v-list-item>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-divider></v-divider>
+
+                  <v-list-item>
+                    <v-list-item-action>
+                      <v-list-item-title>Amount</v-list-item-title>
+                    </v-list-item-action>
+
+                    <v-list-item-content>
+                      <v-list-item>{{ editedItem.amount }}$</v-list-item>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-divider></v-divider>
+
+                  <v-list-item>
+                    <v-list-item-action>
+                      <v-list-item-title>Register</v-list-item-title>
+                    </v-list-item-action>
+
+                    <v-list-item-content>
+                      <v-list-item>{{ editedItem.registerData }}</v-list-item>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </v-form>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
+              <v-btn color="blue darken-1" text @click="deleteICard()">
+                Delete
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-btn small color="blue " @click="editItem(item)">
-          <v-icon> mdi-plus </v-icon>top up
+        <v-btn x-small color="blue " @click="cashItem(item)" text>
+          <v-icon> mdi-plus </v-icon>Cash
+        </v-btn>
+        <!-- <v-btn x-small color="blue " @click="editItem(item)" text>
+          <v-icon> mdi-pen </v-icon>
+        </v-btn> -->
+        <v-btn x-small color="red darken-1" @click="delItem(item)" text>
+          <v-icon> mdi-delete </v-icon>
         </v-btn>
       </template>
     </v-data-table>
 
     <v-alert dense text type="success" :value="alertSuccess" fat>
-      amount up
+      {{ txtalert }}
     </v-alert>
     <v-alert dense text type="error" :value="alertError">
       Error <strong>{{ errorMessages }}</strong> try again
@@ -95,13 +203,16 @@ export default {
     return {
       search: '',
       loading: true,
-      dialog: false,
+      cashDialog: false,
+      editDialog: false,
+      delDialog: false,
       amount: null,
       formTitle: 'Top up',
       alertSuccess: false,
       alertError: false,
       errorMessages: '',
       valid: true,
+      txtalert: '',
       rules: {
         amount: (val) => {
           const pattent = /^\d*\.?\d*$/
@@ -120,7 +231,7 @@ export default {
       headers: [
         {
           text: 'Card ID',
-          align: 'start',
+          align: 'end',
           // filterable: false,
           value: 'cardId',
         },
@@ -129,7 +240,12 @@ export default {
 
         { text: 'Status', value: 'status' },
         { text: 'Register(d/m/y)', value: 'registerData' },
-        { text: 'Cash', value: 'actions', align: 'center', filterable: false },
+        {
+          text: 'Action',
+          value: 'actions',
+          align: 'center',
+          filterable: false,
+        },
       ],
       desserts: [],
     }
@@ -155,13 +271,27 @@ export default {
     editItem(item) {
       // this.editedIndex = this.desserts.indexOf(item)
       this.amount = ''
+      this.editedItem = Object.assign({}, item)
+      this.editDialog = true
+      console.log('item', item)
+    },
+    delItem(item) {
+      this.amount = ''
+      this.editedItem = Object.assign({}, item)
+      this.delDialog = true
+      console.log('item', item)
+    },
+    cashItem(item) {
+      this.amount = ''
 
       this.editedItem = Object.assign({}, item)
-      this.dialog = true
+      this.cashDialog = true
       console.log('item', item)
     },
     close() {
-      this.dialog = false
+      this.editDialog = false
+      this.delDialog = false
+      this.cashDialog = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
       })
@@ -178,6 +308,7 @@ export default {
             if (res.data.success) {
               this.alertSuccess = true
               this.amount = null
+              this.txtalert = 'Amount up'
               this.updatetable()
               this.close()
               setTimeout(() => {
@@ -189,6 +320,32 @@ export default {
             console.log('error')
           })
       }
+    },
+    deleteICard() {
+      this.$axios
+        .get(`${dataRef.host}/api/cardId/delete/${this.editedItem.cardId}`)
+        .then((res) => {
+          if (res.data.success) {
+            this.alertSuccess = true
+            this.amount = null
+            this.updatetable()
+            this.close()
+            this.txtalert = 'Deleted'
+            setTimeout(() => {
+              this.alertSuccess = false
+            }, 5000)
+          }
+        })
+        .catch((error) => {
+          console.log('error')
+          this.alertError = true
+          this.errorMessages = error.message
+          this.delDialog = false
+
+          setTimeout(() => {
+            this.alertError = false
+          }, 10000)
+        })
     },
     updatetable() {
       this.$axios.get(`${dataRef.host}/api/getAllCard`).then((res) => {
