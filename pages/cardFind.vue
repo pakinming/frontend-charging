@@ -1,7 +1,14 @@
 
 <template>
   <v-card>
-    <v-card-title>My Card</v-card-title>
+    <v-card-title>
+      My Card
+      <!-- <v-spacer></v-spacer> -->
+    </v-card-title>
+    <v-card-title>
+      <v-btn color="success" @click="onNewCard()"> New Card </v-btn>
+    </v-card-title>
+
     <v-card-title>
       <v-text-field
         v-model="search"
@@ -13,6 +20,7 @@
         dense
       ></v-text-field>
     </v-card-title>
+
     <v-data-table
       :loading="loading"
       :headers="headers"
@@ -20,7 +28,7 @@
       :search="search"
     >
       <template v-slot:top>
-        <!-- Top up -->
+        <!-- Topup -->
         <v-dialog v-model="cashDialog" max-width="500px">
           <v-card>
             <v-card-title>
@@ -168,6 +176,12 @@
                 Delete
               </v-btn>
             </v-card-actions>
+                    </v-card>
+        </v-dialog>
+        <!-- New Card -->
+        <v-dialog v-model="dialogNewCard" max-width="500px">
+          <v-card>
+            <CardAdd />
           </v-card>
         </v-dialog>
       </template>
@@ -196,6 +210,7 @@
 
 <script>
 import dataRef from '../model/dataRef.vue'
+// import CardAdd from "./cardAdd.vue";
 
 export default {
   middleware: 'auth',
@@ -206,6 +221,8 @@ export default {
       cashDialog: false,
       editDialog: false,
       delDialog: false,
+      dialog: false,
+      dialogNewCard: false,
       amount: null,
       formTitle: 'Top up',
       alertSuccess: false,
@@ -353,6 +370,9 @@ export default {
         this.desserts = res.data.data
         this.loading = false
       })
+    },
+    onNewCard() {
+      this.dialogNewCard = true
     },
   },
   mounted() {

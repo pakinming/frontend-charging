@@ -32,5 +32,13 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.12.1",
     "prettier": "^2.3.2"
+  },
+  "eslintConfig": {     
+    "root": true,     
+    "extends": [       
+      "plugin:vue/essential",       
+      "plugin:prettier/recommended",       
+      "eslint:recommended"     
+    ]   
   }
 }

@@ -1,13 +1,13 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="10" md="8" lg="6">
-        <h1>Add Card</h1>
+      <v-col cols="12">
+        <h1>New Card</h1>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col cols="12" sm="10" md="8" lg="6">
+      <v-col cols="12" >
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-card>
             <v-card-text>
@@ -102,7 +102,7 @@ export default {
     form() {
       return {
         username: this.username,
-        sername: this.fullname,
+        fullname: this.fullname,
         email: this.email,
         mobileNumber: this.mobileNumber,
         cardId: this.cardId,

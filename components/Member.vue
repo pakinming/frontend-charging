@@ -1,13 +1,13 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="10" md="8" lg="6">
-        <h1>Add Member</h1>
+      <v-col cols="12">
+        <h1>New Member</h1>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col cols="12" sm="10" md="8" lg="6">
+      <v-col cols="12">
         <v-card>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-card-text>
@@ -25,8 +25,8 @@
               <v-text-field
                 ref="fullname"
                 v-model="fullname"
-                :rules="[() => !!fullname || 'This field is required']"               
-                label="FullName"
+                :rules="[() => !!fullname || 'This field is required']"
+                label="full name"
                 placeholder="John Doe"
                 prepend-icon="mdi-account-details"
                 required
@@ -66,11 +66,12 @@
               ></v-autocomplete>
             </v-card-text>
 
-            <v-divider class="mt-12"></v-divider>
+            <v-divider class="mt-10"></v-divider>
 
             <v-card-actions>
-              <v-btn text> Cancel </v-btn>
-              <v-spacer></v-spacer>
+             
+              
+              <!-- <v-space></v-space> -->
               <v-slide-x-reverse-transition>
                 <v-tooltip v-if="formHasErrors" left>
                   <template v-slot:activator="{ on, attrs }">
@@ -87,11 +88,12 @@
                   <span>Refresh form</span>
                 </v-tooltip>
               </v-slide-x-reverse-transition>
-              <v-btn color="primary" text @click="submit">
-                <v-icon dark right> mdi-plus </v-icon>
+              <v-btn class="pa-5 " color="green"  @click="submit" outlined text block>
+                <v-icon  > mdi-plus </v-icon>
                 ADD
               </v-btn>
             </v-card-actions>
+            <v-divider class="mt-5"></v-divider>
 
             <v-alert dense text type="success" :value="alertSuccess">
               Add Card ID success
@@ -212,14 +214,14 @@ export default {
     },
   },
   mounted() {
-          this.$axios.get(`${dataRef.host}/api/getAllCard`).then((res) => {
-        console.log(res.data.data)
-        this.desserts = res.data.data
-        this.loading = false
-        res.data.data.map((e) => {
-          if (!e.owner) this.cards.push(e.cardId)
-        })
+    this.$axios.get(`${dataRef.host}/api/getAllCard`).then((res) => {
+      console.log(res.data.data)
+      this.desserts = res.data.data
+      this.loading = false
+      res.data.data.map((e) => {
+        if (!e.owner) this.cards.push(e.cardId)
       })
+    })
   },
 }
 </script>
