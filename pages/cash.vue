@@ -24,8 +24,8 @@
             ></v-text-field>
 
             <v-text-field
-              ref="surname"
-              v-model="surname"
+              ref="fullname"
+              v-model="fullname"
               :rules="[() => !!name || 'This field is required']"
               :error-messages="errorMessages"
               label="Name Surname"
@@ -104,7 +104,7 @@ export default {
     marker: true,
     errorMessages: '',
     name: null,
-    surname: null,
+    fullname: null,
     email: null,
     mobileNumber: null,
     cardId: null,
@@ -138,7 +138,7 @@ export default {
     form() {
       return {
         name: this.name,
-        sername: this.surname,
+        sername: this.fullname,
         email: this.email,
         mobileNumber: this.mobileNumber,
         cardId: this.cardId,

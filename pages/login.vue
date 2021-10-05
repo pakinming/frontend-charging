@@ -2,26 +2,26 @@
   <v-container>
     <v-row justify="center">
       <v-col cols="12" xs="8" sm="8" md="8" lg="5" xl="4">
-        <v-card class="mx-auto pa-2" max-width="100%" id="login">
+        <v-card class="mx-auto pa-2" max-width="100%" id="login" outlined>
           <v-col cols="12" sm="12" class="text-lg-center">
             <v-toolbar-title class="text-h5 pl-0" color="green">
               Login<v-icon>mdi-login</v-icon>
             </v-toolbar-title>
           </v-col>
 
-          <v-text-field            
+          <v-text-field
             label="Username"
             v-model="username"
             prepend-icon="mdi-account"
             :rules="[rules.required]"
-            :type="'text'"   
+            :type="'text'"
             placeholder="Username"
             clearable
           ></v-text-field>
 
           <v-text-field
             v-model="password"
-            prepend-icon="mdi-lock"
+            prepend-icon="mdi-key-variant"
             :append-icon="pwdshow ? 'mdi-eye' : 'mdi-eye-off'"
             :rules="[rules.required, rules.min]"
             :type="pwdshow ? 'text' : 'password'"
@@ -34,19 +34,40 @@
             variant="outlined"
             class="d-inline mb-2"
             color="green"
-            width="70%"
+            width="100%"
             @click="userLogin()"
           >
             <v-icon>mdi-login</v-icon>
             login
           </v-btn>
 
-          <v-btn color="blue" text  :to="'/'" :light="true"    >
-            Register
-          </v-btn>
-                   <v-btn color="blue darken-2" text x-small :to="'forgetPassword'" :light="false">
+          <v-btn
+            color="blue darken-2"
+            text
+            x-small            
+            :light="false"
+          >
             Forgot password?
           </v-btn>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col cols="12" xs="8" sm="8" md="8" lg="5" xl="4">
+        <v-card class="mx-auto pa-3"  outlined>
+          <v-card-text class="pa-0">
+            Don't Have an Account?
+            <v-btn
+              small
+              class="pa-0"
+              color="#0969da"
+              text
+              :to="'register'"
+              link
+            >
+              Create an account.
+            </v-btn>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -54,7 +75,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 import dataHost from '../model/dataRef.vue'
 
 export default {
@@ -70,7 +90,6 @@ export default {
     if (this.$auth.loggedIn) {
       this.$router.replace({ name: 'index' })
     }
-  
   },
   data() {
     return {

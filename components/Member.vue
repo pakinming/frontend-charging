@@ -23,10 +23,10 @@
               ></v-text-field>
 
               <v-text-field
-                ref="surname"
-                v-model="surname"
-                :rules="[() => !!surname || 'This field is required']"
-                label="Surname"
+                ref="fullname"
+                v-model="fullname"
+                :rules="[() => !!fullname || 'This field is required']"
+                label="full name"
                 placeholder="John Doe"
                 prepend-icon="mdi-account-details"
                 required
@@ -66,12 +66,12 @@
               ></v-autocomplete>
             </v-card-text>
 
-            <v-divider class="mt-12"></v-divider>
+            <v-divider class="mt-10"></v-divider>
 
             <v-card-actions>
-              <v-btn text> Cancel </v-btn>
-              <v-spacer></v-spacer>
-
+             
+              
+              <!-- <v-space></v-space> -->
               <v-slide-x-reverse-transition>
                 <v-tooltip v-if="formHasErrors" left>
                   <template v-slot:activator="{ on, attrs }">
@@ -88,11 +88,12 @@
                   <span>Refresh form</span>
                 </v-tooltip>
               </v-slide-x-reverse-transition>
-              <v-btn color="primary" text @click="submit">
-                <v-icon dark right> mdi-plus </v-icon>
+              <v-btn class="pa-5 " color="green"  @click="submit" outlined text block>
+                <v-icon  > mdi-plus </v-icon>
                 ADD
               </v-btn>
             </v-card-actions>
+            <v-divider class="mt-5"></v-divider>
 
             <v-alert dense text type="success" :value="alertSuccess">
               Add Card ID success
@@ -116,7 +117,7 @@ export default {
   data: () => ({
     errorMessages: '',
     username: null,
-    surname: null,
+    fullname: null,
     email: null,
     mobileNumber: null,
     cardId: null,
@@ -146,7 +147,7 @@ export default {
     form() {
       return {
         username: this.username,
-        surname: this.surname,
+        fullname: this.fullname,
         email: this.email,
         mobileNumber: this.mobileNumber,
         cardId: this.cardId,

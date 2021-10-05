@@ -58,8 +58,8 @@ export default {
           value: 'username',
         },
         {
-          text: 'Surname',
-          value: 'surname',
+          text: 'FUll Name',
+          value: 'fullname',
         },
         { text: 'Email', value: 'email' },
 

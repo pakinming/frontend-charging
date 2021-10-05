@@ -61,7 +61,7 @@ export default {
     marker: true,
     errorMessages: '',
     username: null,
-    surname: null,
+    fullname: null,
     email: null,
     mobileNumber: null,
     cardId: null,
@@ -102,7 +102,7 @@ export default {
     form() {
       return {
         username: this.username,
-        sername: this.surname,
+        fullname: this.fullname,
         email: this.email,
         mobileNumber: this.mobileNumber,
         cardId: this.cardId,

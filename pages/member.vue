@@ -23,10 +23,10 @@
               ></v-text-field>
 
               <v-text-field
-                ref="surname"
-                v-model="surname"
-                :rules="[() => !!surname || 'This field is required']"               
-                label="Surname"
+                ref="fullname"
+                v-model="fullname"
+                :rules="[() => !!fullname || 'This field is required']"               
+                label="FullName"
                 placeholder="John Doe"
                 prepend-icon="mdi-account-details"
                 required
@@ -115,7 +115,7 @@ export default {
   data: () => ({
     errorMessages: '',
     username: null,
-    surname: null,
+    fullname: null,
     email: null,
     mobileNumber: null,
     cardId: null,
@@ -145,7 +145,7 @@ export default {
     form() {
       return {
         username: this.username,
-        surname: this.surname,
+        fullname: this.fullname,
         email: this.email,
         mobileNumber: this.mobileNumber,
         cardId: this.cardId,
