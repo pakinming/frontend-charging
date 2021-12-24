@@ -25,7 +25,7 @@
               <v-text-field
                 ref="fullname"
                 v-model="fullname"
-                :rules="[() => !!fullname || 'This field is required']"               
+                :rules="[() => !!fullname || 'This field is required']"
                 label="FullName"
                 placeholder="John Doe"
                 prepend-icon="mdi-account-details"
@@ -210,6 +210,9 @@ export default {
         this.$refs[f].validate(true)
       })
     },
+    deleteCleint(item){
+      
+    }
   },
   mounted() {
           this.$axios.get(`${dataRef.host}/api/getAllCard`).then((res) => {

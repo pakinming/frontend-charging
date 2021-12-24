@@ -2,7 +2,7 @@
 <template>
   <v-card>
     <v-card-title>
-      My Card
+      Card/Top up
       <!-- <v-spacer></v-spacer> -->
     </v-card-title>
     <v-card-title>

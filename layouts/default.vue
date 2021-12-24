@@ -188,7 +188,7 @@ export default {
         },
         {
           icon: 'mdi-card-search-outline',
-          title: 'Find',
+          title: 'Top up / Find',
           to: '/cardFind',
         },
       ],

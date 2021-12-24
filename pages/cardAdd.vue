@@ -19,14 +19,14 @@
                 :rules="[rules.required]"
               ></v-text-field>
 
-              <v-text-field
+              <!-- <v-text-field
                 ref="amount"
                 v-model="amount"
                 label="Amount"
                 placeholder="Up per"
                 prepend-icon="mdi-cash-multiple"
                 :rules="[ rules.amount]"
-              ></v-text-field>
+              ></v-text-field> -->
             </v-card-text>
 
             <v-divider class="mt-5"></v-divider>
@@ -152,7 +152,7 @@ export default {
               this.cardId = null
               this.amount = null
               this.alertSuccess = true
-              this.alertError = false            
+              this.alertError = false
               this.$refs.form.reset()
             }
             if (res.data.error) {
@@ -173,7 +173,7 @@ export default {
       //   console.log(res);
       // });
 
-      
+
     },
   },
 }
