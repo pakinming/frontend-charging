@@ -52,7 +52,7 @@ export default {
     '@nuxtjs/auth-next',
   ],
 
-  auth: {   
+  auth: {
     redirect: {
       login: '/login',
       logout: '/login',
@@ -60,7 +60,7 @@ export default {
       home: '/login'
     },
     strategies: {
-      
+
       local: {
         cookie: {
           name: 'sid'
@@ -88,8 +88,9 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: 'https://ws-charging.herokuapp.com',            
- 
+    baseURL: 'https://ws-charging.herokuapp.com',
+    // baseURL: 'http://localhost:8889',
+
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
